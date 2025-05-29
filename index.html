@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Mol Viewer</title>
+    <script src='https://3Dmol.org/build/3Dmol-min.js'></script>
+    <style>
+        body { margin: 0; }
+        #viewer { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id='viewer'></div>
+    <script>
+        let element = document.getElementById('viewer');
+        let config = { backgroundColor: 'white' };
+        let viewer = $3Dmol.createViewer(element, config);
+        let xyzData = `8
+None
+N 0.000442 1.479976 -0.162170
+H 0.837225 0.920563 -0.015400
+H 0.000480 2.287965 0.458529
+H -0.837223 0.921533 -0.016752
+O 2.745543 -0.305833 0.155173
+C 3.763969 -0.800141 -0.147679
+O -2.746298 -0.304044 0.154390
+C -3.763558 -0.801672 -0.146937
+Energy: -280.056339979`;
+        viewer.addModel(xyzData, 'xyz');
+        viewer.setStyle({}, {stick:{}, sphere:{scale:0.3}});
+        viewer.zoomTo();
+        viewer.render();
+    </script>
+</body>
+</html>
