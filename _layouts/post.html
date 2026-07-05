@@ -1,0 +1,16 @@
+---
+layout: default
+---
+<article class="post">
+  <p class="post-meta">
+    <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y.%m.%d" }}</time>
+    {% if page.tags and page.tags.size > 0 %}<span class="dot">·</span> {{ page.tags | join: " · " }}{% endif %}
+  </p>
+  <h1 class="post-title">{{ page.title }}</h1>
+
+  <div class="post-body">
+    {{ content }}
+  </div>
+
+  <p class="back"><a href="{{ '/' | relative_url }}">← Volver a las entradas</a></p>
+</article>

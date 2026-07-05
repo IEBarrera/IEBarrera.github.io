@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>moiréGL · IE Barrera</title>
+  <meta name="description" content="Personal site of IE Barrera. Projects, notes, and experiments.">
+  <link rel="preconnect" href="/">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">IE&nbsp;Barrera</a>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/sobre-mi/">About</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <article class="post">
+  <p class="post-meta">
+    <time datetime="2026-07-03T00:00:00-04:00">2026.07.03</time>
+    <span class="dot">·</span> proyecto · moiré · opengl · 3d
+  </p>
+  <h1 class="post-title">moiréGL</h1>
+
+  <div class="post-body">
+    <p><strong>moiréGL</strong> es un programa para sintetizar patrones de moiré —de grilla
+vertical u horizontal— a partir de modelos 3D arbitrarios, usando sus
+coordenadas UV.</p>
+
+<!--more-->
+
+<h2 id="una-introducción-simplificada">Una introducción simplificada</h2>
+
+<p>Un patrón de moiré aparece cuando dos patrones similares se superponen. El
+caso más simple es el que forman dos grillas de franjas verticales (u
+horizontales).</p>
+
+<canvas id="moire-grid" class="moire-live" aria-hidden="true"></canvas>
+<script src="/assets/js/moire-grid.js" defer=""></script>
+
+<p>Como se puede ver, la superposición de dos grillas con una leve diferencia en el ancho de sus franjas genera un patrón nuevo. La razón es que, al no coincidir sus periodos, la posición relativa entre las franjas cambia de forma gradual a lo largo de la imagen: en ciertas zonas las franjas de un patrón caen sobre los huecos del otro y rellenan los espacios vacíos, mientras que en otras las franjas coinciden y dejan al descubierto la mayor cantidad de espacio vacío. Ese contraste periódico entre zonas llenas y vacías —de un periodo mucho mayor que el de las grillas originales— es lo que produce el efecto de magnificación, y es el principio que opera detrás de cualquier patrón de moiré.</p>
+
+<h2 id="la-idea">La idea</h2>
+
+<p>Sintetizar un moiré exige pensar el proceso a la inversa: partir del patrón deseado y determinar qué superposición de grillas lo produce.</p>
+
+<h2 id="cómo-está-hecho">Cómo está hecho</h2>
+
+<ul>
+  <li><strong>Núcleo nativo en C++/OpenGL</strong> (<code class="language-plaintext highlighter-rouge">moire_native.pyd</code>): renderizado <em>offscreen</em>
+con GLAD + GLFW, carga de OBJ, cámara y transformaciones de objeto
+configurables.</li>
+  <li><strong>Interfaz en PyQt5</strong>: controles en vivo de cámara, geometría, frecuencia de
+líneas, separación de rejilla y modo interactivo con auto-render.</li>
+  <li><strong>Composición en NumPy/Pillow</strong>: genera la rejilla reveladora y la anima
+(loop y ping-pong) desplazándola sobre el render.</li>
+</ul>
+
+<h2 id="estado">Estado</h2>
+
+<p>Funcional, con GUI completa y render nativo. Próximos pasos: exportar los pares
+de capas listos para impresión y explorar rejillas curvilíneas para moirés que
+se muevan en trayectorias no lineales.</p>
+
+<hr />
+
+<p><em>Código: <a href="https://github.com/IEBarrera/moireGL">github.com/IEBarrera/moireGL</a></em></p>
+
+  </div>
+
+  <p class="back"><a href="/">← Volver a las entradas</a></p>
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>© 2026 IE Barrera</span>
+    <span class="dot">·</span>
+    <a href="mailto:ibarrerac@uc.cl">ibarrerac@uc.cl</a>
+  </footer>
+</body>
+</html>

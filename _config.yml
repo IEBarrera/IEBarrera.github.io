@@ -1,0 +1,25 @@
+# --- Site identity ---
+title: "IE Barrera"
+tagline: "Code, Science, Visuals."
+author: "IE Barrera"
+email: "ibarrerac@uc.cl"
+description: "Personal site of IE Barrera. Projects, notes, and experiments."
+
+# --- URLs ---
+# If you publish to your own repo "IEBarrera.github.io", leave baseurl empty.
+# If you publish this same repo (moireGL) via /docs, use:  baseurl: "/moireGL"
+baseurl: ""
+url: ""
+
+# --- Build ---
+markdown: kramdown
+permalink: /entradas/:title/
+timezone: America/Santiago
+excerpt_separator: "<!--more-->"
+
+# Keep Jekyll from processing these paths
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor
