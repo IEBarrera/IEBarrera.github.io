@@ -118,6 +118,15 @@ a { color: var(--fg); text-decoration: none; }
           mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
 }
 
+/* --- Panel de interlazado (scroll-driven, formas básicas) --- */
+.interlace-live {
+  display: block;
+  width: 100%;
+  height: 560px;         /* provisional: el JS fija la altura real */
+  margin: 2rem 0;
+  background: #0d0d0d;   /* mismo negro del fondo (modo oscuro) */
+}
+
 /* --- Listado de entradas --- */
 .section-label {
   font-family: var(--mono);

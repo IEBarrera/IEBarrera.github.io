@@ -45,25 +45,33 @@ horizontales).</p>
 
 <h2 id="la-idea">La idea</h2>
 
-<p>Sintetizar un moiré exige pensar el proceso a la inversa: partir del patrón deseado y determinar qué superposición de grillas lo produce.</p>
+<p>Sintetizar un moiré exige pensar el proceso a la inversa: partir del patrón deseado y determinar qué superposición de grillas lo produce. Si bien matemáticamente el proceso está bien descrito, es posible simplificar enormemente el problema utilizando un enfoque clásico: la animación de grilla.</p>
 
-<h2 id="cómo-está-hecho">Cómo está hecho</h2>
+<p>Para crear una animación de grilla es necesario aplicar un proceso de <em>interlacing</em> a la animación deseada, es decir, unir todos los frames de forma intercalada, tomando cíclicamente una columna de cada frame a la vez. A su vez, la grilla reveladora debe estar construida de tal forma que muestre un solo frame a la vez:</p>
+
+<canvas id="interlace" class="interlace-live" aria-hidden="true"></canvas>
+<script src="/assets/js/interlace.js" defer=""></script>
+
+<p>Un patrón de moiré puede considerarse una animación de grilla tradicional, en donde la animación está conformada por una grilla con las mismas proporciones de la grilla reveladora, y en donde la grilla reveladora revela un píxel de cada frame a la vez. Esto último puede parecer contraintuitivo; sin embargo, se debe a que lo que “revela” el patrón no es la separación en sí de la grilla reveladora, sino la intersección entre esta y las líneas de la grilla deformada.</p>
+
+<p>Si bien esta forma de sintetizar es conceptualmente simple, a nivel computacional es un desperdicio de recursos, dado que gran parte de cada frame de animación no se utiliza: habría que renderizar una gran cantidad de píxeles para luego desechar más de los que se usarán.
+Para evitar tal desperdicio surge la pregunta: ¿es posible renderizar únicamente los píxeles que se necesitan?</p>
+
+<p>En prácticamente cualquier engine 3D es posible generar materiales (o shaders) considerando distintas variables del entorno, como podrían ser el ángulo, la posición o —lo que nos interesa— la posición en el espacio de pantalla. Siendo más técnicos, es posible vincular la posición UV de una textura de grilla en un modelo 3D con las coordenadas NDC, lo que significa que para cada píxel en pantalla puedo seleccionar automáticamente el “frame” de animación de la grilla en el modelo 3D.</p>
+
+<p>Con este enfoque se creó moiréGL, utilizando, como su nombre lo indica, OpenGL. El resultado es una síntesis eficiente en la que la proyección en perspectiva del modelo 3D deforma la grilla a través de sus coordenadas UV —la profundidad solo resuelve la oclusión—, y en la que el patrón se genera aplicando un offset cíclico de la grilla sobre esas coordenadas.</p>
+
+<h2 id="detalles-técnicos">Detalles técnicos</h2>
 
 <ul>
   <li><strong>Núcleo nativo en C++/OpenGL</strong> (<code class="language-plaintext highlighter-rouge">moire_native.pyd</code>): renderizado <em>offscreen</em>
 con GLAD + GLFW, carga de OBJ, cámara y transformaciones de objeto
 configurables.</li>
   <li><strong>Interfaz en PyQt5</strong>: controles en vivo de cámara, geometría, frecuencia de
-líneas, separación de rejilla y modo interactivo con auto-render.</li>
-  <li><strong>Composición en NumPy/Pillow</strong>: genera la rejilla reveladora y la anima
+líneas, separación de grilla y modo interactivo con auto-render.</li>
+  <li><strong>Composición en NumPy/Pillow</strong>: genera la grilla reveladora y la anima
 (loop y ping-pong) desplazándola sobre el render.</li>
 </ul>
-
-<h2 id="estado">Estado</h2>
-
-<p>Funcional, con GUI completa y render nativo. Próximos pasos: exportar los pares
-de capas listos para impresión y explorar rejillas curvilíneas para moirés que
-se muevan en trayectorias no lineales.</p>
 
 <hr />
 

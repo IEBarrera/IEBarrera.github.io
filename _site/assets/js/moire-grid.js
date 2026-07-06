@@ -38,6 +38,9 @@
     '  return smoothstep(0.25 + w, 0.25 - w, v);',
     '}',
 
+    // TODO: las frecuencias (0.140/0.147) están en píxeles físicos; en
+    // pantallas high-DPI el patrón se ve más denso que en dpr=1. Escalar
+    // por dpr (pasarlo como uniform) para igualar el tamaño visual.
     'void main(){',
     '  float x = gl_FragCoord.x;',
     // dos frecuencias casi iguales -> moiré. 'a' se mueve, 'b' es estática.
@@ -105,6 +108,8 @@
   canvas.addEventListener('mouseenter', function () { target = 1; });
   canvas.addEventListener('mouseleave', function () { target = 0; });
 
+  // TODO: el rAF corre aunque el canvas esté fuera del viewport; pausarlo
+  // con un IntersectionObserver.
   function frame(now) {
     resize();
     var dt = Math.min((now - last) / 1000, 0.05);  // clamp por si hay saltos de pestaña
