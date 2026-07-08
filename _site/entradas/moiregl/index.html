@@ -62,9 +62,9 @@ horizontales).</p>
 <p>Si bien esta forma de sintetizar es conceptualmente simple, a nivel computacional es un desperdicio de recursos, dado que gran parte de cada frame de animación no se utiliza: habría que renderizar una gran cantidad de píxeles para luego desechar más de los que se usarán.
 Para evitar tal desperdicio surge la pregunta: ¿es posible renderizar únicamente los píxeles que se necesitan?</p>
 
-<p>En prácticamente cualquier engine 3D es posible generar materiales (o shaders) considerando distintas variables del entorno, como podrían ser el ángulo, la posición o —lo que nos interesa— la posición en el espacio de pantalla. Siendo más técnicos, es posible vincular la posición UV de una textura de grilla en un modelo 3D con las coordenadas NDC, lo que significa que para cada píxel en pantalla puedo seleccionar automáticamente el “frame” de animación de la grilla en el modelo 3D.</p>
+<p>En prácticamente cualquier engine 3D es posible generar materiales (o shaders) considerando distintas variables del entorno, como podrían ser el ángulo, la posición o lo que nos interesa, la posición en el espacio de pantalla. Siendo más técnicos, es posible vincular la posición UV de una textura de grilla en un modelo 3D con las coordenadas NDC, lo que significa que para cada píxel en pantalla puedo seleccionar automáticamente el “frame” de animación de la grilla en el modelo 3D.</p>
 
-<p>Con este enfoque se creó moiréGL, utilizando, como su nombre lo indica, OpenGL. El resultado es una síntesis eficiente en la que la proyección en perspectiva del modelo 3D deforma la grilla a través de sus coordenadas UV —la profundidad solo resuelve la oclusión—, y en la que el patrón se genera aplicando un offset cíclico de la grilla sobre esas coordenadas.</p>
+<p>Con este enfoque se creó moiréGL, utilizando, como su nombre lo indica, OpenGL. El resultado es una síntesis eficiente en la que la proyección en perspectiva del modelo 3D deforma la grilla a través de sus coordenadas UV (la profundidad solo resuelve la oclusión), y en la que el patrón se genera aplicando un offset cíclico de la grilla sobre esas coordenadas.</p>
 
 <h2 id="detalles-técnicos">Detalles técnicos</h2>
 
@@ -89,7 +89,7 @@ desplazándola sobre el render.</li>
 
 <h2 id="qué-se-puede-crear-con-esto">¿Qué se puede crear con esto?</h2>
 
-<p>moiréGL fue desarrollado para el artista <a href="https://www.instagram.com/mario.morales.astudillo">Mario Morales Astudillo</a>, quien lleva los patrones de moiré al mundo real: dos placas —abajo la imagen interlazada, encima la grilla reveladora— montadas con una separación precisa (utilizando una corrección de perspectiva en la grilla reveladora), de modo que el patrón se anima con el movimiento del espectador frente a la obra. El modelo 3D reproduce una de sus tantas piezas:</p>
+<p>moiréGL fue desarrollado para el artista <a href="https://www.instagram.com/mario.morales.astudillo">Mario Morales Astudillo</a>, quien lleva los patrones de moiré al mundo real: dos placas, abajo la imagen interlazada y encima la grilla reveladora, montadas con una separación precisa, de modo que el patrón se anima con el movimiento del espectador frente a la obra. El modelo 3D reproduce una de sus tantas piezas:</p>
 
 <canvas id="glb-viewer" class="glbviewer-live" data-src="/assets/obj/saturno_grid_final.glb" data-khronos-lib-path="/assets/vendor/khronos-gltf-sample-renderer/libs/" data-hdr-src="/assets/obj/golden_gate_hills_2k.hdr" data-pivot-offset="-1.25,-0.81 , 0   " aria-label="Modelo 3D de la obra (Saturno); arrastra para rotarla, rueda o pellizco para hacer zoom" data-supersample-factor="2"></canvas>
 <p class="asset-credit">Visor 3D basado en <a href="https://github.com/KhronosGroup/glTF-Sample-Renderer">Khronos glTF Sample Renderer</a>, desarrollado por UX3D con apoyo de Khronos Group y Google, bajo licencia Apache 2.0.</p>
