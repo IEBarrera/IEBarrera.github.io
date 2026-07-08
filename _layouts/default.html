@@ -15,10 +15,8 @@
     <nav class="site-nav">
       {% if page.lang == 'en' %}
       <a href="{{ '/en/' | relative_url }}">Home</a>
-      <a href="{{ '/about/' | relative_url }}">About</a>
       {% else %}
       <a href="{{ '/' | relative_url }}">Home</a>
-      <a href="{{ '/sobre-mi/' | relative_url }}">About</a>
       {% endif %}
       {% if page.translation_url %}
       <a class="lang-switch" href="{{ page.translation_url | relative_url }}">{% if page.lang == 'en' %}ES{% else %}EN{% endif %}</a>
