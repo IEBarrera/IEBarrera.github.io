@@ -111,7 +111,7 @@ a { color: var(--fg); text-decoration: none; }
   width: 100%;
   height: 260px;
   margin: 2rem 0;
-  background: #0d0d0d;   /* mismo negro del fondo (modo oscuro) */
+  background: var(--bg);   /* sigue el tema: blanco en claro, negro en oscuro */
   border: 1px solid var(--rule);
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
@@ -124,7 +124,30 @@ a { color: var(--fg); text-decoration: none; }
   width: 100%;
   height: 560px;         /* provisional: el JS fija la altura real */
   margin: 2rem 0;
-  background: #0d0d0d;   /* mismo negro del fondo (modo oscuro) */
+  background: var(--bg);   /* sigue el tema: blanco en claro, negro en oscuro */
+}
+
+/* --- Visor GLB (modelo de ejemplo, arrastrable) --- */
+.glbviewer-live {
+  display: block;
+  width: 100%;
+  height: 420px;
+  margin: 2rem 0 .35rem;
+  background: var(--bg);   /* sigue el tema: blanco en claro, negro en oscuro */
+  cursor: grab;
+  touch-action: pan-y;     /* en móvil el scroll vertical sigue funcionando */
+}
+.glbviewer-live:active { cursor: grabbing; }
+.glbviewer-live[data-status]::after {
+  content: attr(data-status);
+}
+
+.asset-credit {
+  margin: 0 0 1.8rem;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: .72rem;
+  line-height: 1.45;
 }
 
 /* --- Listado de entradas --- */

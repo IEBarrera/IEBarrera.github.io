@@ -12,5 +12,9 @@ layout: default
     {{ content }}
   </div>
 
+  {% if page.lang == 'en' %}
+  <p class="back"><a href="{{ '/en/' | relative_url }}">← Back to the posts</a></p>
+  {% else %}
   <p class="back"><a href="{{ '/' | relative_url }}">← Volver a las entradas</a></p>
+  {% endif %}
 </article>

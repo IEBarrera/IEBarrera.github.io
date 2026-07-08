@@ -1,6 +1,7 @@
 /* ---------------------------------------------------------------
    moiré de grillas verticales — dos rejillas batiendo (WebGL)
-   Líneas blancas (#f0f0f0) sobre el mismo negro del fondo (#0d0d0d).
+   Colores según el tema de la página: líneas #f0f0f0 sobre #0d0d0d en
+   modo oscuro, líneas #111 sobre blanco en modo claro.
 
    Loop infinito: la capa móvil se desplaza acumulando fase de forma
    continua, así que nunca hay "salto" de reinicio.
@@ -26,9 +27,10 @@
     'uniform float u_phase;',    // fase acumulada de la capa móvil (en px)
     'uniform float u_reveal;',   // 0 = normal · 1 = hover (congelada + oscura)
 
-    'const vec3 BG   = vec3(0.051);',   // #0d0d0d
-    'const vec3 LINE = vec3(0.941);',   // #f0f0f0
-    'const vec3 DARK = vec3(0.34);',    // gris al oscurecer la capa móvil
+    // Colores según el tema de la página (se setean desde JS):
+    'uniform vec3 u_bg;',        // fondo (blanco en claro, negro en oscuro)
+    'uniform vec3 u_line;',      // líneas (negras en claro, blancas en oscuro)
+    'uniform vec3 u_mid;',       // gris de la capa móvil al revelarla
 
     // Barras verticales antialiaseadas. Cobertura 0..1.
     // w = derivada por pixel de (x*freq) = freq  -> antialiasing sin extensiones.
@@ -46,10 +48,10 @@
     // dos frecuencias casi iguales -> moiré. 'a' se mueve, 'b' es estática.
     '  float a = bars(x + u_phase, 0.140);',
     '  float b = bars(x,           0.147);',
-    // Composición por capas: primero las estáticas (blancas), luego la móvil
-    // encima, que se oscurece con u_reveal para destacarla.
-    '  vec3 col = mix(BG, LINE, b);',
-    '  vec3 aCol = mix(LINE, DARK, u_reveal);',
+    // Composición por capas: primero las estáticas, luego la móvil encima,
+    // que vira a gris con u_reveal para destacarla.
+    '  vec3 col = mix(u_bg, u_line, b);',
+    '  vec3 aCol = mix(u_line, u_mid, u_reveal);',
     '  col = mix(col, aCol, a);',
     '  gl_FragColor = vec4(col, 1.0);',
     '}'
@@ -82,6 +84,25 @@
 
   var uPhase  = gl.getUniformLocation(prog, 'u_phase');
   var uReveal = gl.getUniformLocation(prog, 'u_reveal');
+  var uBg     = gl.getUniformLocation(prog, 'u_bg');
+  var uLine   = gl.getUniformLocation(prog, 'u_line');
+  var uMid    = gl.getUniformLocation(prog, 'u_mid');
+
+  // Colores según el tema (los mismos --bg / --line del CSS).
+  var darkMq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function applyTheme() {
+    if (darkMq && darkMq.matches) {
+      gl.uniform3f(uBg,   0.051, 0.051, 0.051);  // #0d0d0d
+      gl.uniform3f(uLine, 0.941, 0.941, 0.941);  // #f0f0f0
+      gl.uniform3f(uMid,  0.34,  0.34,  0.34);
+    } else {
+      gl.uniform3f(uBg,   1.0,   1.0,   1.0);    // #ffffff
+      gl.uniform3f(uLine, 0.067, 0.067, 0.067);  // #111111
+      gl.uniform3f(uMid,  0.66,  0.66,  0.66);
+    }
+  }
+  applyTheme();
+  if (darkMq && darkMq.addEventListener) darkMq.addEventListener('change', applyTheme);
 
   function resize() {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);

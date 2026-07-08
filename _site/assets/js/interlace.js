@@ -40,6 +40,16 @@
   var M = 14;              // margen: el mismo arriba que a los lados
   var DUR = 3400;          // ms de la animación completa
   var HPI = Math.PI / 2;
+  var LBL = 26;            // alto reservado para cada etiqueta de texto
+
+  // Etiquetas: se pasan por data-* desde el post (ahí vive la traducción);
+  // si faltan, se elige por el idioma de la página.
+  var isEn = (document.documentElement.lang || '').indexOf('en') === 0;
+  var LBL_FRAMES = canvas.getAttribute('data-label-frames') ||
+    (isEn ? 'animation frames (cropped)' : 'frames de animación (recortados)');
+  var LBL_RESULT = canvas.getAttribute('data-label-result') ||
+    (isEn ? 'interlaced image' : 'imagen interlazada');
+  var textCol = '#111';
 
   var W, H, dpr, F, S, topY, yMid, drop, finalY, strips, xL;
 
@@ -54,14 +64,18 @@
     F = (W - 2 * M) / 3.7;
     S = F / N;
     var GAP = 0.35 * F;               // ensancha el 2º codo
-    H = Math.round(2 * M + 3 * F + GAP + 0.45 * F);  // 0.45F de bajada recta
+    // + LBL arriba (etiqueta de los frames) y abajo (etiqueta del resultado)
+    H = Math.round(2 * M + 3 * F + GAP + 0.45 * F) + 2 * LBL;  // 0.45F de bajada recta
     canvas.style.height = H + 'px';
     canvas.width  = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    topY   = M;                       // mismo margen arriba que a los lados
-    finalY = H - M - F;               // dónde se arma la imagen final
+    // color del texto: el del tema (lo hereda el canvas del body)
+    textCol = getComputedStyle(canvas).color || textCol;
+
+    topY   = M + LBL;                 // deja sitio a la etiqueta de arriba
+    finalY = H - M - LBL - F;         // dónde se arma la imagen final
     yMid   = finalY - 2 * F - GAP;    // fin de la bajada recta
     drop   = Math.max(0, yMid - topY);
 
@@ -148,6 +162,21 @@
   // e: progreso (suavizado) 0..1 de la animación completa
   function draw(e) {
     ctx.clearRect(0, 0, W, H);
+
+    // Etiquetas: la de arriba es fija; la de abajo aparece con la
+    // imagen final (fade en el último tramo de la animación).
+    ctx.font = '12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = textCol;
+    ctx.globalAlpha = 0.62;
+    ctx.fillText(LBL_FRAMES, W / 2, topY - 10);
+    var a = Math.max(0, (e - 0.88) / 0.12);
+    if (a > 0) {
+      ctx.globalAlpha = 0.62 * a;
+      ctx.fillText(LBL_RESULT, W / 2, finalY + F + 18);
+    }
+    ctx.globalAlpha = 1;
+
     ctx.lineWidth = S + 0.6;
     ctx.lineJoin = 'round';
 
@@ -244,6 +273,14 @@
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () { update(); ticking = false; });
+  }
+
+  var darkMq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  if (darkMq && darkMq.addEventListener) {
+    darkMq.addEventListener('change', function () {
+      textCol = getComputedStyle(canvas).color || textCol;
+      draw(ease(u));
+    });
   }
 
   resize();

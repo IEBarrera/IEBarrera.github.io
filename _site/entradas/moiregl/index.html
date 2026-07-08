@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>moiréGL · IE Barrera</title>
   <meta name="description" content="Personal site of IE Barrera. Projects, notes, and experiments.">
+  <link rel="alternate" hreflang="en" href="/posts/moiregl/">
   <link rel="preconnect" href="/">
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
@@ -12,8 +13,13 @@
   <header class="site-header">
     <a class="brand" href="/">IE&nbsp;Barrera</a>
     <nav class="site-nav">
+      
       <a href="/">Home</a>
       <a href="/sobre-mi/">About</a>
+      
+      
+      <a class="lang-switch" href="/posts/moiregl/">EN</a>
+      
     </nav>
   </header>
 
@@ -49,7 +55,7 @@ horizontales).</p>
 
 <p>Para crear una animación de grilla es necesario aplicar un proceso de <em>interlacing</em> a la animación deseada, es decir, unir todos los frames de forma intercalada, tomando cíclicamente una columna de cada frame a la vez. A su vez, la grilla reveladora debe estar construida de tal forma que muestre un solo frame a la vez:</p>
 
-<canvas id="interlace" class="interlace-live" aria-hidden="true"></canvas>
+<canvas id="interlace" class="interlace-live" data-label-frames="frames de animación (recortados)" data-label-result="imagen interlazada" aria-hidden="true"></canvas>
 <script src="/assets/js/interlace.js" defer=""></script>
 
 <p>Un patrón de moiré puede considerarse una animación de grilla tradicional, en donde la animación está conformada por una grilla con las mismas proporciones de la grilla reveladora, y en donde la grilla reveladora revela un píxel de cada frame a la vez. Esto último puede parecer contraintuitivo; sin embargo, se debe a que lo que “revela” el patrón no es la separación en sí de la grilla reveladora, sino la intersección entre esta y las líneas de la grilla deformada.</p>
@@ -64,22 +70,38 @@ Para evitar tal desperdicio surge la pregunta: ¿es posible renderizar únicamen
 <h2 id="detalles-técnicos">Detalles técnicos</h2>
 
 <ul>
-  <li><strong>Núcleo nativo en C++/OpenGL</strong> (<code class="language-plaintext highlighter-rouge">moire_native.pyd</code>): renderizado <em>offscreen</em>
-con GLAD + GLFW, carga de OBJ, cámara y transformaciones de objeto
-configurables.</li>
+  <li><strong>La grilla no es una textura: se evalúa por píxel en el fragment shader.</strong>
+Para cada fragmento se toma la coordenada UV del modelo y se le suma un
+offset proporcional a <code class="language-plaintext highlighter-rouge">mod(x_pantalla, separación)</code>: cada columna de
+pantalla dentro de un periodo de la grilla reveladora “ve” una fase
+distinta del patrón. Es el interlacing clásico, pero resuelto en un solo
+pase y sin renderizar un solo píxel de más.</li>
+  <li><strong>Núcleo nativo en C++/OpenGL</strong> (<code class="language-plaintext highlighter-rouge">moire_native.pyd</code>, expuesto a Python con
+pybind11): contexto GLFW oculto y renderizado <em>offscreen</em> a un FBO —la
+resolución solo está limitada por la GPU—, carga de OBJ con UVs, cámara y
+transformaciones de objeto configurables. Geometría, shader y framebuffer
+se cachean entre llamadas, lo que hace viable el modo interactivo.</li>
   <li><strong>Interfaz en PyQt5</strong>: controles en vivo de cámara, geometría, frecuencia de
-líneas, separación de grilla y modo interactivo con auto-render.</li>
-  <li><strong>Composición en NumPy/Pillow</strong>: genera la grilla reveladora y la anima
-(loop y ping-pong) desplazándola sobre el render.</li>
+líneas y separación de grilla, con auto-render a ~60 fps.</li>
+  <li><strong>Composición en NumPy/Pillow</strong>: genera la grilla reveladora (con
+antialiasing por supersampling) y la anima (loop y ping-pong)
+desplazándola sobre el render.</li>
 </ul>
 
-<hr />
+<h2 id="qué-se-puede-crear-con-esto">¿Qué se puede crear con esto?</h2>
 
-<p><em>Código: <a href="https://github.com/IEBarrera/moireGL">github.com/IEBarrera/moireGL</a></em></p>
+<p>moiréGL fue desarrollado para el artista <a href="https://www.instagram.com/mario.morales.astudillo">Mario Morales Astudillo</a>, quien lleva los patrones de moiré al mundo real: dos placas —abajo la imagen interlazada, encima la grilla reveladora— montadas con una separación precisa (utilizando una corrección de perspectiva en la grilla reveladora), de modo que el patrón se anima con el movimiento del espectador frente a la obra. El modelo 3D reproduce una de sus tantas piezas:</p>
+
+<canvas id="glb-viewer" class="glbviewer-live" data-src="/assets/obj/saturno_grid_final.glb" data-khronos-lib-path="/assets/vendor/khronos-gltf-sample-renderer/libs/" data-hdr-src="/assets/obj/golden_gate_hills_2k.hdr" data-pivot-offset="-1.25,-0.81 , 0   " aria-label="Modelo 3D de la obra (Saturno); arrastra para rotarla, rueda o pellizco para hacer zoom" data-supersample-factor="2"></canvas>
+<p class="asset-credit">Visor 3D basado en <a href="https://github.com/KhronosGroup/glTF-Sample-Renderer">Khronos glTF Sample Renderer</a>, desarrollado por UX3D con apoyo de Khronos Group y Google, bajo licencia Apache 2.0.</p>
+<script type="module" src="/assets/js/glb-viewer-khronos.js"></script>
+
 
   </div>
 
+  
   <p class="back"><a href="/">← Volver a las entradas</a></p>
+  
 </article>
 
   </main>

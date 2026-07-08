@@ -23,3 +23,5 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor
+  - tools
+  - "assets/obj/*.exr"

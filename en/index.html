@@ -1,0 +1,26 @@
+---
+layout: default
+permalink: /en/
+lang: en
+translation_url: /
+---
+<section class="hero">
+  <h1 class="hero-name">IE Barrera</h1>
+  <p class="hero-tag">{{ site.tagline }}</p>
+</section>
+
+<section class="posts">
+  <h2 class="section-label">Posts</h2>
+  <ul class="post-list">
+    {% assign en_posts = site.posts | where: "lang", "en" %}
+    {% for post in en_posts %}
+    <li class="post-list-item">
+      <a class="post-list-link" href="{{ post.url | relative_url }}">
+        <time class="post-list-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y.%m.%d" }}</time>
+        <span class="post-list-title">{{ post.title }}</span>
+      </a>
+      {% if post.summary %}<p class="post-list-excerpt">{{ post.summary }}</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>

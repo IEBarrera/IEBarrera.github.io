@@ -1,0 +1,9 @@
+_site/
+.jekyll-cache/
+.jekyll-metadata
+vendor/
+!assets/vendor/
+!assets/vendor/khronos-gltf-sample-renderer/
+!assets/vendor/khronos-gltf-sample-renderer/**
+Gemfile.lock
+.sass-cache/

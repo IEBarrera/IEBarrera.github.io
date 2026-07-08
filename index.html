@@ -1,5 +1,7 @@
 ---
 layout: default
+lang: es
+translation_url: /en/
 ---
 <section class="hero">
   <h1 class="hero-name">IE Barrera</h1>
@@ -9,7 +11,8 @@ layout: default
 <section class="posts">
   <h2 class="section-label">Posts</h2>
   <ul class="post-list">
-    {% for post in site.posts %}
+    {% assign es_posts = site.posts | where_exp: "p", "p.lang != 'en'" %}
+    {% for post in es_posts %}
     <li class="post-list-item">
       <a class="post-list-link" href="{{ post.url | relative_url }}">
         <time class="post-list-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y.%m.%d" }}</time>

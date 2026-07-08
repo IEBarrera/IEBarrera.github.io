@@ -2,6 +2,8 @@
 layout: default
 title: Sobre mí
 permalink: /sobre-mi/
+lang: es
+translation_url: /about/
 description: "Sobre IE Barrera — generalista: química teórica, software a medida y 3D."
 ---
 
